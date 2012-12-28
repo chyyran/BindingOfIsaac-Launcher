@@ -76,9 +76,9 @@ namespace Installer
                 return "FlashAchievements.exe";
             }
             //Check for Uninstall file
-            if (!File.Exists(StartPath + @"\uninstall.exe"))
+            if (!File.Exists(StartPath + @"\uninstaller.exe"))
             {
-                return "uninstall.exe";
+                return "uninstaller.exe";
             }
             //Check for Wrath of the Lamb md5
             if (!File.Exists(StartPath + @"\WotL.md5"))
@@ -109,6 +109,8 @@ namespace Installer
                 installpathbutton.Hide();
                 nextbutton.Hide();
                 filePath.Hide();
+                linkLabel1.Hide();
+                achievementFixBox.Hide();
                 //Check MD5 hash to confirm legit copy
                 if (!checkMD5Isaac(dialog.SelectedPath+@"\Isaac.exe","Checking existing Binding of Isaac installation",File.ReadAllText(Application.StartupPath+@"\WotL.md5")))
                 {
@@ -178,6 +180,7 @@ namespace Installer
         
         private void PatchWotL()
         {
+
             StatusLabel.Text = "Patching Wrath of The Lamb to Vanilla";
             //For some odd reason, if we specify path to xdelta, the resulting app will have admin manifest, so we copy it to the application startup directory
             File.Copy(dialog.SelectedPath + @"\Isaac.exe", dialog.SelectedPath + @"\Isaac_WotL.exe");
@@ -220,7 +223,11 @@ namespace Installer
             //Just copy the launcher and uninstaller to selected path
             StatusLabel.Text = "Installing Launcher";
             File.Copy(Application.StartupPath + @"\launcher.exe", dialog.SelectedPath + @"\Isaac.exe");
-            File.Copy(Application.StartupPath + @"\uninstall.exe", dialog.SelectedPath + @"\uninstall.exe");
+            if(File.Exists(dialog.SelectedPath+@"\uninstall.exe")){
+                File.Delete(dialog.SelectedPath+@"\uninstall.exe");
+            }
+
+            File.Copy(Application.StartupPath + @"\uninstaller.exe", dialog.SelectedPath + @"\uninstall.exe");
             MessageBox.Show("The Binding of Isaac Launcher has been installed");
             this.Close();
         }
@@ -229,9 +236,12 @@ namespace Installer
         {
             //Copy the achievement fix and back up the old one
             StatusLabel.Text = "Installing Achievement Fix";
-            File.Copy(dialog.SelectedPath + @"\FlashAchievements.exe", "FlashAchievements.old");
+            if(!File.Exists(dialog.SelectedPath+@"\FlashAchievements.old")){
+                File.Copy(dialog.SelectedPath + @"\FlashAchievements.exe", dialog.SelectedPath + @"\FlashAchievements.old");
+            }
             File.Delete(dialog.SelectedPath + @"\FlashAchievements.exe");
             File.Copy(Application.StartupPath + @"\FlashAchievements.exe", dialog.SelectedPath + @"\FlashAchievements.exe");
+            
         }
         private bool checkMD5Isaac(string filename, string statuslabel, string md5)
         {
@@ -258,6 +268,7 @@ namespace Installer
         {
             Process.Start("http://forums.steampowered.com/forums/showthread.php?t=2216833");
         }
+
 
 
     }

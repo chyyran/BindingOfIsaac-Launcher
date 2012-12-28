@@ -33,8 +33,8 @@ namespace Uninstaller
         private void CheckFiles()
         {
             if(!File.Exists(Application.StartupPath+@"\FlashAchievements.old")){
-                achievementFix.Enabled = false;
-                achievementFix.Checked = false;
+                achievementFix.Hide();
+                achievementFix.Checked = true;
             }
             if(!File.Exists(Application.StartupPath+@"\Isaac.exe")){
                
@@ -60,12 +60,12 @@ namespace Uninstaller
 
         private void wotlButton_Click(object sender, EventArgs e)
         {
-            uninstall("Isaac_WotL.exe", "Isaac_Vanilla.exe", achievementFix.Checked);
+            uninstall("Isaac_WotL.exe", "Isaac_Vanilla.exe");
             MessageBox.Show("The Binding of Isaac Launcher has been uninstalled. Wrath of the Lamb was kept");
             this.Close();
         }
 
-        private void uninstall(string keep, string remove, bool keepAchievements)
+        private void uninstall(string keep, string remove)
         {
             wotlButton.Hide();
             vanillaButton.Hide();
@@ -77,7 +77,7 @@ namespace Uninstaller
             File.Delete(Application.StartupPath + @"\" + remove);
             File.Copy(Application.StartupPath + @"\" + keep, Application.StartupPath + @"\Isaac.exe");
             File.Delete(Application.StartupPath + @"\" + keep);
-            if (!keepAchievements)
+            if (!achievementFix.Checked)
             {
                 statusLabel.Text = "Uninstalling Achievement Fix";
                 File.Delete(Application.StartupPath + @"\FlashAchievements.exe");
@@ -88,7 +88,7 @@ namespace Uninstaller
 
         private void vanillaButton_Click(object sender, EventArgs e)
         {
-            uninstall("Isaac_Vanilla.exe", "Isaac_WotL.exe", achievementFix.Checked);
+            uninstall("Isaac_Vanilla.exe", "Isaac_WotL.exe");
             MessageBox.Show("The Binding of Isaac Launcher has been uninstalled. Vanilla Binding of Isaac was kept");
             this.Close();
         }
