@@ -1,0 +1,9 @@
+C:\Users\Ronny\Documents\Visual Studio 2010\Projects\BOILauncher\Uninstaller\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Ronny\Documents\Visual Studio 2010\Projects\BOILauncher\Uninstaller\obj\x86\Debug\Uninstaller.Uninstaller.resources
+C:\Users\Ronny\Documents\Visual Studio 2010\Projects\BOILauncher\Uninstaller\obj\x86\Debug\Uninstaller.Properties.Resources.resources
+C:\Users\Ronny\Documents\Visual Studio 2010\Projects\BOILauncher\Uninstaller\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Ronny\Documents\Visual Studio 2010\Projects\BOILauncher\Uninstaller\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Ronny\Documents\Visual Studio 2010\Projects\BOILauncher\Uninstaller\bin\Debug\Uninstaller.exe
+C:\Users\Ronny\Documents\Visual Studio 2010\Projects\BOILauncher\Uninstaller\bin\Debug\Uninstaller.pdb
+C:\Users\Ronny\Documents\Visual Studio 2010\Projects\BOILauncher\Uninstaller\obj\x86\Debug\Uninstaller.exe
+C:\Users\Ronny\Documents\Visual Studio 2010\Projects\BOILauncher\Uninstaller\obj\x86\Debug\Uninstaller.pdb
