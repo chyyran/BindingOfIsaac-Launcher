@@ -56,7 +56,7 @@
             this.installpathbutton.TabIndex = 1;
             this.installpathbutton.Text = "Choose Install Path";
             this.installpathbutton.UseVisualStyleBackColor = true;
-            this.installpathbutton.Click += new System.EventHandler(this.nextbutton_Click);
+            this.installpathbutton.Click += new System.EventHandler(this.installpathbutton_Click);
             // 
             // nextbutton
             // 
