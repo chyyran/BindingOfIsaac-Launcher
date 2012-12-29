@@ -3,7 +3,17 @@ Binding of Isaac Launcher: Revamped by Ron
 
 Building
 ========
-Open Binding of Isaac Launcher in VS10.
+Open Binding of Isaac Launcher in VS10, and build the solution.
+Installer.exe is the installer, and requires the md5 sums of Wrath of the Lamb and the vanilla Binding of Isaac, 
+the launcher (named Launcher.exe), the uninstaller, (Uninstaller.exe) and xdelta.exe, as well as the patch from Wrath of the Lamb to vanilla Binding of Isaac (patch.xdelta)
+to run. xdelta and the patch should be included, launcher and uninstaller are found in their respective directories in the solution
+
+Launcher.exe is the actual launcher. It will launch the
+```Isaac_Vanilla.exe```
+and
+```Isaac_WotL.exe```
+respectively (You'll know once built). Since no checks have been added, if one attempts to launch without a file being present, it will throw an exception.\
+
 
 Maintaining
 ===========
@@ -17,3 +27,9 @@ Everything should be ready, in case of an update, however, future maintainers, y
 xdelta delta Isaac_WotL.exe Isaac_Vanilla.exe patch.xdelta
 ```
 Pack it all up in a nice WinRAR SFX and you're good to go
+
+Installing
+==========
+If you're just looking to install it, just download the latest installer from
+http://punyman.com/projects/Binding%20of%20Isaac%20Launcher%20Installer.exe
+and run the installer. Prompts should be easy enough to figure out.
