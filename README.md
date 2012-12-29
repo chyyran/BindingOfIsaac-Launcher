@@ -16,11 +16,11 @@ Maintaining
 ===========
 To all who come after me:
 
-Everything should be ready, in case of an update, however, future maintainers, you will need to do a few things
-1. Get the md5 for the latest Wrath of the Lamb EXE, put this in WotL.md5
-2. Get the md5 for the latest Vanilla EXE, put this in Vanila.md5
-4. Rename the Vanilla EXE to "Isaac_Vanilla.exe"
-3. Make a patch with Xdelta, like this 
+Everything should be ready, in case of an update, however, future maintainers, you will need to do a few things  
+1. Get the md5 for the latest Wrath of the Lamb EXE, put this in WotL.md5  
+2. Get the md5 for the latest Vanilla EXE, put this in Vanila.md5  
+4. Rename the Vanilla EXE to "Isaac_Vanilla.exe"  
+3. Make a patch with Xdelta, like this   
 ```
 xdelta delta Isaac_WotL.exe Isaac_Vanilla.exe patch.xdelta
 ```
@@ -28,6 +28,4 @@ Pack it all up in a nice WinRAR SFX and you're good to go
 
 Installing
 ==========
-If you're just looking to install it, just download the latest installer from
-http://punyman.com/projects/Binding%20of%20Isaac%20Launcher%20Installer.exe
-and run the installer. Prompts should be easy enough to figure out.
+If you're just looking to install it, just download the latest installer from [here](http://punyman.com/projects/Binding%20of%20Isaac%20Launcher%20Installer.exe) and run the installer. Prompts should be easy enough to figure out.
