@@ -29,3 +29,15 @@ Pack it all up in a nice WinRAR SFX and you're good to go
 Installing
 ==========
 If you're just looking to install it, just download the latest installer from [here](http://punyman.com/projects/Binding%20of%20Isaac%20Launcher%20Installer.exe) and run the installer. Prompts should be easy enough to figure out.
+
+Manual Install
+==============
+So, you want to install it manually eh?  
+Really, all you have to do is get the launcher.exe (which you can get from this repo, or build yourself), rename it to Isaac.exe, and put it in your BoI install folder.  
+But, before you do that, rename your Wrath of the Lamb exe to Isaac\_WotL.exe, and if you have the vanilla, rename that to Isaac\_Vanilla.exe, and you should be all good
+
+To patch Wrath of the Lamb to vanilla, get patch.xdelta from this repo, and xdelta.exe from this repo, or somewhere else (Be sure to get xdelta1, not xdelta2 or xdelta3), then patch like so
+```
+xdelta patch patch.xdelta Isaac_WotL.exe
+```
+and that should output Isaac\_Vanilla.exe
