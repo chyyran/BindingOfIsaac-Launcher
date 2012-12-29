@@ -16,4 +16,4 @@ Everything should be ready, in case of an update, however, future maintainers, y
 ```
 xdelta delta Isaac_WotL.exe Isaac_Vanilla.exe patch.xdelta
 ```
-Pack it all up in a nice 7z executable, and you're all ready.
+Pack it all up in a nice WinRAR SFX and you're good to go
