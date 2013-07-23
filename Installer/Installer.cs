@@ -57,7 +57,7 @@ namespace Installer
         {
             //Check for xdelta patch util
  
-            if (!File.Exists(Path.Combine(Application.StartupPath, "xdelta.exe")));
+            if (!File.Exists(Path.Combine(Application.StartupPath, "xdelta.exe")))
             {
                 return "xdelta.exe";
             }
@@ -203,8 +203,11 @@ namespace Installer
         {
             progressBar1.Increment(increment);
             progressBar1.Refresh();
-            //Sleep for half a second, for aesthetic purposes :)
-            System.Threading.Thread.Sleep(500);
+            //Sleep for quarter a second, for aesthetic purposes :)
+            using (var waiter = new System.Threading.AutoResetEvent(false)){
+                waiter.WaitOne(250);
+            }
+
 
         }
     }
