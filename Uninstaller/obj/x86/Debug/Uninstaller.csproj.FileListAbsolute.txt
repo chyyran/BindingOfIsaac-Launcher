@@ -7,3 +7,12 @@ C:\Users\Ronny\Documents\Visual Studio 2010\Projects\BOILauncher\Uninstaller\obj
 C:\Users\Ronny\Documents\Visual Studio 2010\Projects\BOILauncher\Uninstaller\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\Ronny\Documents\Visual Studio 2010\Projects\BOILauncher\Uninstaller\obj\x86\Debug\Uninstaller.exe
 C:\Users\Ronny\Documents\Visual Studio 2010\Projects\BOILauncher\Uninstaller\obj\x86\Debug\Uninstaller.pdb
+D:\Coding\Visual Studio\BindingOfIsaac-Launcher\Uninstaller\bin\Debug\Uninstaller.exe
+D:\Coding\Visual Studio\BindingOfIsaac-Launcher\Uninstaller\bin\Debug\Uninstaller.pdb
+D:\Coding\Visual Studio\BindingOfIsaac-Launcher\Uninstaller\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Coding\Visual Studio\BindingOfIsaac-Launcher\Uninstaller\obj\x86\Debug\Uninstaller.Uninstaller.resources
+D:\Coding\Visual Studio\BindingOfIsaac-Launcher\Uninstaller\obj\x86\Debug\Uninstaller.Properties.Resources.resources
+D:\Coding\Visual Studio\BindingOfIsaac-Launcher\Uninstaller\obj\x86\Debug\GenerateResource.read.1.tlog
+D:\Coding\Visual Studio\BindingOfIsaac-Launcher\Uninstaller\obj\x86\Debug\GenerateResource.write.1.tlog
+D:\Coding\Visual Studio\BindingOfIsaac-Launcher\Uninstaller\obj\x86\Debug\Uninstaller.exe
+D:\Coding\Visual Studio\BindingOfIsaac-Launcher\Uninstaller\obj\x86\Debug\Uninstaller.pdb

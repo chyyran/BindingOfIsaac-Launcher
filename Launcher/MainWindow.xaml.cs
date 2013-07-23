@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Diagnostics;
+using System.Diagnostics; 
 
 namespace Launcher
 {
@@ -23,6 +23,7 @@ namespace Launcher
         public MainWindow()
         {
             InitializeComponent();
+            MessageBox.Show(SaveManager.getSolPath());
         }
 
         private void exitButton_Click(object sender, RoutedEventArgs e)
