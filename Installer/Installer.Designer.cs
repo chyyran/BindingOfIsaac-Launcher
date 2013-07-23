@@ -79,22 +79,24 @@
             // achievementFixBox
             // 
             this.achievementFixBox.AutoSize = true;
-            this.achievementFixBox.Location = new System.Drawing.Point(11, 76);
+            this.achievementFixBox.Location = new System.Drawing.Point(11, 75);
             this.achievementFixBox.Name = "achievementFixBox";
-            this.achievementFixBox.Size = new System.Drawing.Size(214, 17);
+            this.achievementFixBox.Size = new System.Drawing.Size(199, 17);
             this.achievementFixBox.TabIndex = 4;
-            this.achievementFixBox.Text = "Install Achievement Fix (by 1nvisible~) ?";
+            this.achievementFixBox.Text = "Install Achievement Fix by 1nvisible~";
+            this.achievementFixToolTip.SetToolTip(this.achievementFixBox, "The achievement fix resolves achievements earned ingame, but not unlocked on Stea" +
+                    "m");
             this.achievementFixBox.UseVisualStyleBackColor = true;
             // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(8, 96);
+            this.linkLabel1.Location = new System.Drawing.Point(216, 77);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(171, 13);
+            this.linkLabel1.Size = new System.Drawing.Size(134, 13);
             this.linkLabel1.TabIndex = 5;
             this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "More info on Achievement Fix here";
+            this.linkLabel1.Text = "Achivement Fix Information";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // Installer

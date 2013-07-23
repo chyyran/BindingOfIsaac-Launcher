@@ -29,8 +29,6 @@ namespace Installer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //Set Achievement Fix tooltip
-            achievementFixToolTip.SetToolTip(achievementFixBox, "The Achievement Fix fixes certain achievements not unlocking in Steam.");
             //Check that all files are present before continuing
             if (!CheckFiles().Equals("good"))
             {
@@ -95,50 +93,6 @@ namespace Installer
             //If everything is present, we return "good"
             return "good";
         }
-        
-        private void nextbutton_Click(object sender, EventArgs e)
-        {
-
-            //Confirm installation
-            DialogResult confirm = MessageBox.Show("Are you sure you want to install The Binding of Isaac Launcher to" + Environment.NewLine + dialog.SelectedPath, "Install The Binding of Isaac Launcher?", MessageBoxButtons.YesNo);
-            if (confirm == DialogResult.No)
-            {
-                return;
-            }
-            else
-            {
-                //Hide unecessary controls
-                installpathbutton.Hide();
-                nextbutton.Hide();
-                filePath.Hide();
-                linkLabel1.Hide();
-                achievementFixBox.Hide();
-                //Check MD5 hash to confirm legit copy
-                if (!CheckMD5Isaac(dialog.SelectedPath+@"\Isaac.exe","Checking existing Binding of Isaac installation",File.ReadAllText(Application.StartupPath+@"\WotL.md5")))
-                {
-                    MessageBox.Show("The Binding of Isaac was not found, or did not include a valid installation of The Wrath of the Lamb");
-                    this.Close();
-                }
-                else
-                {
-                    //Patch Wrath of the Lamb
-                    PatchWotL();
-                    //Copy Launcher to directory
-                    InstallLauncher();
-                    //Install Save file fix
-                    InstallSaveFile();
-                    //If the achievement fix is checked, install achievement fix
-                    if (achievementFixBox.Checked)
-                    {
-                        InstallAchievementFix();
-                    }
-                    MessageBox.Show("The Binding of Isaac Launcher: Revamped has been installed." + Environment.NewLine + "To uninstall, please run " + dialog.SelectedPath + @"\uninstall.exe");
-                }
-
-
-            }
-
-        }
 
         private void installpathbutton_Click(object sender, EventArgs e)
         {
@@ -147,151 +101,55 @@ namespace Installer
             filePath.Text = dialog.SelectedPath;
         }
 
-        private void InstallLauncher()
-        {
-            //Just copy the launcher and uninstaller to selected path
-            StatusLabel.Text = "Installing Launcher";
-            File.Copy(Application.StartupPath + @"\launcher.exe", dialog.SelectedPath + @"\Isaac.exe");
-            if(File.Exists(dialog.SelectedPath+@"\uninstall.exe")){
-                File.Delete(dialog.SelectedPath+@"\uninstall.exe");
-            }
-
-            File.Copy(Application.StartupPath + @"\uninstaller.exe", dialog.SelectedPath + @"\uninstall.exe");
-            MessageBox.Show("The Binding of Isaac Launcher has been installed");
-            this.Close();
-        }
-
-        private void InstallAchievementFix()
-        {
-            //Copy the achievement fix and back up the old one
-            StatusLabel.Text = "Installing Achievement Fix";
-            if(!File.Exists(Path.Combine(dialog.SelectedPath,"FlashAchievements.old"))){
-                File.Copy(Path.Combine(dialog.SelectedPath , "FlashAchievements.exe"), Path.Combine(dialog.SelectedPath , "FlashAchievements.old"));
-            }
-            File.Delete(Path.Combine(dialog.SelectedPath, "FlashAchievements.exe"));
-            File.Copy(Path.Combine(Application.StartupPath, "FlashAchievements.exe"), Path.Combine(dialog.SelectedPath,"FlashAchievements.exe"));
-            
-        }
-
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("http://forums.steampowered.com/forums/showthread.php?t=2216833");
         }
 
-        private string GetSolPath()
-        {
-            string savePathContainer = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Macromedia", "Flash Player", "#SharedObjects");
-            string savePath = Path.Combine(Directory.GetDirectories(savePathContainer).First(), "localhost");
-            return savePath;
-        }
-
-        private void InstallSaveFile()
-        {
-            string WotlSolSaveFile = Path.Combine(GetSolPath(), "so.sol");
-            File.Move(WotlSolSaveFile,Path.Combine(dialog.SelectedPath,"so.sol.wotl"));
-            File.Create(Path.Combine(dialog.SelectedPath, "so.sol.boi")).Dispose();
-            File.Delete(Path.Combine(dialog.SelectedPath, "serial.txt"));
-            File.Create(Path.Combine(dialog.SelectedPath, "serial.txt")).Dispose();
-            File.SetAttributes(Path.Combine(dialog.SelectedPath,"serial.txt"), FileAttributes.ReadOnly);
-
-        }
-
-        #region ported
-        private void PatchWotL()
+        private void nextbutton_Click(object sender, EventArgs e)
         {
 
-            StatusLabel.Text = "Patching Wrath of The Lamb to Vanilla";
-            //For some odd reason, if we specify path to xdelta, the resulting app will have admin manifest, so we copy it to the application startup directory
-            File.Copy(dialog.SelectedPath + @"\Isaac.exe", dialog.SelectedPath + @"\Isaac_WotL.exe");
-            //Copy the Wrath of the Lamb EXE Application Startup
-            File.Copy(dialog.SelectedPath + @"\Isaac.exe", Application.StartupPath + @"\Isaac.exe");
-            ProcessStartInfo xdelta = new ProcessStartInfo(Application.StartupPath + @"\xdelta.exe", "patch patch.xdelta Isaac.exe");
-            xdelta.WorkingDirectory = Application.StartupPath;
-            xdelta.WindowStyle = ProcessWindowStyle.Hidden;
-            //Here we do the actual patching
-            Process.Start(xdelta).WaitForExit();
-            //Clean up
-            File.Delete(Application.StartupPath + @"\Isaac.exe");
-            //Make sure patch completed successfully
-            if (!CheckMD5Isaac(Application.StartupPath + @"\Isaac_Vanilla.exe", "Confirming integrity of installation", File.ReadAllText(Application.StartupPath + @"\Vanilla.md5")))
+            DialogResult confirm = MessageBox.Show("Launcher will be installed to " + dialog.SelectedPath, "Binding of Isaac Launcher: Revamped", MessageBoxButtons.YesNo);
+            if (confirm == DialogResult.Yes)
             {
-                MessageBox.Show("An Error Occured, patch did not complete successfully. Please attempt to reinstall");
-                StatusLabel.Text = "Cleaning Files, please do not close the installer";
-                File.Delete(dialog.SelectedPath + @"\Isaac_WotL.exe");
-                try
+
+               try
                 {
-                    File.Delete(Application.StartupPath + @"\Isaac_Vanilla.exe");
+                    InstallerProcess installLauncher = new InstallerProcess(dialog.SelectedPath, Application.StartupPath);
+                    installLauncher.CreateFolderStructure();
+                    MessageBox.Show("FOLDERS CREATED");
+                    installLauncher.PatchWrathOfTheLamb();
+                    MessageBox.Show("WOTL PATCHED");
+                    installLauncher.InstallLauncher();
+                    MessageBox.Show("LAUNCHER COPIED");
+                    installLauncher.InstallAchievementFix();
+                    MessageBox.Show("ACH FIX");
+                    installLauncher.CopyFlashAchievements();
+                    MessageBox.Show("ACH COPIED");
+                    installLauncher.InstallSavesFix();
+                    MessageBox.Show("SAVES FIXED");
                 }
-                catch (System.IO.FileNotFoundException)
-                {
-                    this.Close();
-                }
-                this.Close();
+
+               catch (Exception ex)
+               {
+                 MessageBox.Show("Encountered Exception " + ex.GetType().ToString() + Environment.NewLine + ex.Message + Environment.NewLine 
+                     + "Verify game cache with Steam and try again." +
+                     Environment.NewLine+
+                     "If you do not own the Wrath of the Lamb DLC, the Launcher will fail to install."
+                     +Environment.NewLine+
+                     "If you are re-installing, please uninstall before you attempt installing again"
+                     );
+                 InstallerProcess.ExceptionCleanup(dialog.SelectedPath);
+               }
+
+               finally
+               {
+                   this.Close();
+               }
             }
-            //Copy newly patched vanilla to selected path
-            File.Copy(Application.StartupPath + @"\Isaac_Vanilla.exe", dialog.SelectedPath + @"\Isaac_Vanilla.exe");
-            //Clean up
-            File.Delete(Application.StartupPath + @"\Isaac_Vanilla.exe");
-            //Clean up 
-            File.Delete(dialog.SelectedPath + @"\Isaac.exe");
 
         }
 
-        private bool CheckMD5Isaac(string filename, string statuslabel, string md5)
-        {
-            StatusLabel.Text = statuslabel;
-            if (!File.Exists(filename))
-            {
-                return false;
-            }
-
-
-            if (!GetFilesMD5Hash(filename).Equals(md5, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return false;
-            }
-            else
-            {
-
-                return true;
-
-            }
-        }
-
-        public string GetFilesMD5Hash(string file)
-        {
-            //MD5 hash provider for computing the hash of the file
-            MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
-
-            //open the file
-            FileStream stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read, 8192);
-
-            //calculate the files hash
-            md5.ComputeHash(stream);
-
-            //close our stream
-            stream.Close();
-
-            //byte array of files hash
-            byte[] hash = md5.Hash;
-
-            //string builder to hold the results
-            StringBuilder sb = new StringBuilder();
-
-            //loop through each byte in the byte array
-            foreach (byte b in hash)
-            {
-                //format each byte into the proper value and append
-                //current value to return value
-                sb.Append(string.Format("{0:X2}", b));
-            }
-
-            //return the MD5 hash of the file
-            return sb.ToString();
-        }
-
-
-        #endregion
     }
 
 }

@@ -21,30 +21,39 @@ namespace Installer
     {
         string isaacPath;
         string installerPath;
-        bool installAchievements;
-
         string vanillaPath;
         string wrathOfTheLambPath;
 
-        public InstallerProcess(string isaacPath, string installerPath,  bool installAchievements)
+        public InstallerProcess(string isaacPath, string installerPath)
         {
             this.isaacPath = isaacPath;
-            this.installAchievements = installAchievements;
             this.installerPath = installerPath;
 
             this.vanillaPath = Path.Combine(isaacPath, "vanilla");
             this.wrathOfTheLambPath = Path.Combine(isaacPath, "wotl");
         }
 
-        public bool PatchWrathOfTheLamb()
+        public void CreateFolderStructure()
+        {
+            if(!Directory.Exists(wrathOfTheLambPath)){
+                Directory.CreateDirectory(wrathOfTheLambPath);
+            }
+
+            if(!Directory.Exists(vanillaPath)){
+                Directory.CreateDirectory(vanillaPath);
+            }
+
+        }
+
+        public void PatchWrathOfTheLamb()
         {
             //For some odd reason, if we specify path to xdelta, the resulting app will have admin manifest, so we copy it to the application startup directory
             
             //Copy unpatched Isaac.exe to Wrath of The Lamb folder
-            File.Copy(Path.Combine(isaacPath, "Isaac.exe"), Path.Combine(wrathOfTheLambPath,"Isaac_WotL.exe"));
+            File.Copy(Path.Combine(isaacPath, "Isaac.exe"), Path.Combine(wrathOfTheLambPath,"Isaac_WotL.exe"), true);
            
             //Copy the Wrath of the Lamb EXE Application Startup
-            File.Copy(Path.Combine(isaacPath, "Isaac.exe"), Path.Combine(installerPath, "Isaac.exe"));
+            File.Copy(Path.Combine(isaacPath, "Isaac.exe"), Path.Combine(installerPath, "Isaac.exe"), true);
 
    
             //Patch Wrath of The Lamb to Isaac_Vanilla.exe
@@ -61,23 +70,87 @@ namespace Installer
                 File.Delete(Path.Combine(isaacPath, "Isaac_WotL.exe"));
                 try
                 {
-                    File.Delete(Path.Combine(installerPath,"Isaac_Vanilla.exe"));
+                    File.Delete(Path.Combine(installerPath, "Isaac_Vanilla.exe"));
                 }
                 catch (FileNotFoundException)
                 {
-                   //If Isaac_Vanilla.exe wasn't created, just ignore it and continue
+                    //If Isaac_Vanilla.exe wasn't created, just ignore it and continue
                 }
-                return false;
+                finally
+                {
+                    throw new IOException("Isaac.exe was not patched correctly");
+                }
             }
 
             //Move newly patched vanilla to selected path
-            File.Move(Path.Combine(installerPath, "Isaac_Vanilla.exe"), Path.Combine(vanillaPath, "Isaac_Vanilla.exe"));
+            MoveFileOverwrite(Path.Combine(installerPath, "Isaac_Vanilla.exe"), Path.Combine(vanillaPath, "Isaac_Vanilla.exe"));
 
             //Delete unpatched Isaac.exe
             File.Delete(Path.Combine(isaacPath, "Isaac.exe"));
-            return true;
         }
 
+        public void InstallLauncher()
+        {           
+            File.Copy(Path.Combine(installerPath, "launcher.exe"), Path.Combine(isaacPath, "Isaac.exe"), true);
+            File.Copy(Path.Combine(installerPath, "uninstaller.exe"), Path.Combine(isaacPath, "uninstall.exe"), true);
+        }
+
+        public void InstallAchievementFix()
+        {
+            //Copy the achievement fix and back up the old one
+            if (!File.Exists(Path.Combine(isaacPath, "FlashAchievements.old")))
+            {
+                File.Move(Path.Combine(isaacPath, "FlashAchievements.exe"), Path.Combine(isaacPath, "FlashAchievements.old"));  
+            }
+
+            File.Copy(Path.Combine(installerPath, "FlashAchievements.exe"), Path.Combine(isaacPath, "FlashAchievements.exe"), true);
+        }
+
+        public void CopyFlashAchievements()
+        {
+            File.Copy(Path.Combine(isaacPath, "FlashAchievements.exe"), Path.Combine(wrathOfTheLambPath, "FlashAchievements.exe"), true);
+            File.Copy(Path.Combine(isaacPath, "FlashAchievements.exe"), Path.Combine(vanillaPath, "FlashAchievements.exe"), true);
+
+            File.Copy(Path.Combine(isaacPath, "steam_api.dll"), Path.Combine(wrathOfTheLambPath, "steam_api.dll"), true);
+            File.Copy(Path.Combine(isaacPath, "steam_api.dll"), Path.Combine(vanillaPath, "steam_api.dll"), true);
+        }
+
+        public void InstallSavesFix()
+        {
+
+            //Move existing save file to Wrath Of The Lamb folder
+            if (File.Exists(Path.Combine(isaacPath, "serial.txt")))
+            {
+                File.Copy(Path.Combine(isaacPath, "serial.txt"), Path.Combine(isaacPath, "serial.txt.bak"), true);
+                MoveFileOverwrite(Path.Combine(isaacPath, "serial.txt"), Path.Combine(wrathOfTheLambPath, "serial.txt"));
+            }
+
+
+            //stub so.sol and so.sxx
+
+            Path.Combine(GetSolPath(), "so.sol");
+
+            if(File.Exists(Path.Combine(GetSolPath(), "so.sol"))){
+                File.SetAttributes(Path.Combine(GetSolPath(), "so.sol"), FileAttributes.Normal);
+                File.Delete(Path.Combine(GetSolPath(), "so.sol"));
+            }
+
+
+            if (File.Exists(Path.Combine(GetSolPath(), "so.sxx")))
+            {
+                File.SetAttributes(Path.Combine(GetSolPath(), "so.sxx"), FileAttributes.Normal);
+                File.Delete(Path.Combine(GetSolPath(), "so.sxx"));
+            }
+
+            File.Create(Path.Combine(GetSolPath(), "so.sol")).Dispose();
+            File.Create(Path.Combine(GetSolPath(), "so.sxx")).Dispose();
+
+            File.SetAttributes(Path.Combine(GetSolPath(), "so.sxx"), FileAttributes.ReadOnly);
+            File.SetAttributes(Path.Combine(GetSolPath(), "so.sol"), FileAttributes.ReadOnly);
+
+        }
+
+        #region misc
 
         private ProcessStartInfo GetXdelta(string args)
         {
@@ -87,23 +160,19 @@ namespace Installer
             return xdelta;
         }
 
-
-        private void InstallLauncher()
+        private string GetSolPath()
         {
-            //Check if file exists, then move the launcher and uninstaller to selected path
-            
-            if(File.Exists(Path.Combine(isaacPath, "Isaac.exe"))){
-                File.Delete(Path.Combine(isaacPath, "Isaac.exe"));
-            }
-
-            if (File.Exists(Path.Combine(isaacPath, "uninstall.exe")))
-            {
-                File.Delete(Path.Combine(isaacPath, "uninstall.exe"));
-            }
-
-            File.Move(Path.Combine(installerPath, "launcher.exe"), Path.Combine(isaacPath, "Isaac.exe"));
-            File.Move(Path.Combine(installerPath, "uninstaller.exe"), Path.Combine(isaacPath, "uninstall.exe"));
+            string savePathContainer = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Macromedia", "Flash Player", "#SharedObjects");
+            string savePath = Path.Combine(Directory.GetDirectories(savePathContainer).First(), "localhost");
+            return savePath;
         }
+
+        private void MoveFileOverwrite(string oldPath, string newPath)
+        {
+            File.Copy(oldPath, newPath, true);
+            File.Delete(oldPath);
+        }
+        #endregion
 
         #region MD5
         /// <summary>
@@ -158,5 +227,19 @@ namespace Installer
             }
         }
         #endregion
+
+        public static void ExceptionCleanup(string isaacPath)
+        {
+            if (Directory.Exists(Path.Combine(isaacPath, "wotl"))){
+                Directory.Delete(Path.Combine(isaacPath, "wotl"), true);
+            }
+            if (Directory.Exists(Path.Combine(isaacPath, "vanilla"))){
+                Directory.Delete(Path.Combine(isaacPath, "vanilla"), true);
+            }
+            
+
+            //Validate files with Steam
+            Process.Start("steam://validate/113200");
+        }
     }
 }

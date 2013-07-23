@@ -1,4 +1,4 @@
-Binding of Isaac Launcher: Revamped by Ron
+Binding of Isaac Launcher: Revamped 
 ==========================================
 
 Building
