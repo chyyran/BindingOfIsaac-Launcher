@@ -167,7 +167,7 @@ namespace Installer
             return savePath;
         }
 
-        private void MoveFileOverwrite(string oldPath, string newPath)
+        private static void MoveFileOverwrite(string oldPath, string newPath)
         {
             File.Copy(oldPath, newPath, true);
             File.Delete(oldPath);
@@ -233,8 +233,14 @@ namespace Installer
             if (Directory.Exists(Path.Combine(isaacPath, "wotl"))){
                 Directory.Delete(Path.Combine(isaacPath, "wotl"), true);
             }
+
             if (Directory.Exists(Path.Combine(isaacPath, "vanilla"))){
                 Directory.Delete(Path.Combine(isaacPath, "vanilla"), true);
+            }
+
+            if (File.Exists(Path.Combine(isaacPath, "serial.txt.bak")))
+            {
+                MoveFileOverwrite(Path.Combine(isaacPath, "serial.txt.bak"), Path.Combine(isaacPath, "serial.txt"));
             }
             
 

@@ -32,22 +32,22 @@ namespace Uninstaller
 
         private void CheckFiles()
         {
-            if(!File.Exists(Application.StartupPath+@"\FlashAchievements.old")){
+            if(!File.Exists(Path.Combine(Application.StartupPath,"FlashAchievements.old"))){
                 achievementFix.Hide();
                 achievementFix.Checked = true;
             }
-            if(!File.Exists(Application.StartupPath+@"\Isaac.exe")){
+            if(!File.Exists(Path.Combine(Application.StartupPath,"Isaac.exe"))){
                
                 MessageBox.Show("The Binding of Isaac Launcher: Revamped was not found." + Environment.NewLine + "Make sure you started the uninstaller in your Binding of Isaac install directory");
                 this.Close();
             }
 
-            if (!File.Exists(Application.StartupPath + @"\Isaac_WotL.exe"))
+            if (!Directory.Exists(Path.Combine(Application.StartupPath, "wotl")))
             {
                 wotlButton.Enabled = false;
             }
 
-            if (!File.Exists(Application.StartupPath + @"\Isaac_Vanilla.exe"))
+            if (!Directory.Exists(Path.Combine(Application.StartupPath, "vanilla")))
             {
                 vanillaButton.Enabled = false;
             }
@@ -60,41 +60,80 @@ namespace Uninstaller
 
         private void wotlButton_Click(object sender, EventArgs e)
         {
-            uninstall("Isaac_WotL.exe", "Isaac_Vanilla.exe");
+            uninstall(GameTypes.BOI_WOTL);
             MessageBox.Show("The Binding of Isaac Launcher has been uninstalled. Wrath of the Lamb was kept");
             this.Close();
         }
 
-        private void uninstall(string keep, string remove)
+        private void vanillaButton_Click(object sender, EventArgs e)
+        {
+            uninstall(GameTypes.BOI_VANILLA);
+            MessageBox.Show("The Binding of Isaac Launcher has been uninstalled. Vanilla Binding of Isaac was kept");
+            this.Close();
+        }
+
+
+        private void uninstall(GameTypes keep)
         {
             wotlButton.Hide();
             vanillaButton.Hide();
             textBox1.Hide();
             exitButton.Hide();
             achievementFix.Hide();
+            
             statusLabel.Text = "Uninstalling Binding of Isaac Launcher";
-            File.Delete(Application.StartupPath + @"\Isaac.exe");
-            File.Delete(Application.StartupPath + @"\" + remove);
-            File.Copy(Application.StartupPath + @"\" + keep, Application.StartupPath + @"\Isaac.exe");
-            File.Delete(Application.StartupPath + @"\" + keep);
+ 
+            if (keep == GameTypes.BOI_VANILLA)
+            {
+                File.Copy(Path.Combine(Application.StartupPath, "vanilla","Isaac_Vanilla.exe"), Path.Combine(Application.StartupPath,"Isaac.exe"), true);
+                File.Copy(Path.Combine(Application.StartupPath, "vanilla", "serial.txt"), Path.Combine(Application.StartupPath, "serial.txt"), true);
+
+            }
+
+            if (keep == GameTypes.BOI_WOTL)
+            {
+                File.Copy(Path.Combine(Application.StartupPath, "wotl", "Isaac_WotL.exe"), Path.Combine(Application.StartupPath, "Isaac.exe"), true);
+                File.Copy(Path.Combine(Application.StartupPath, "wotl", "serial.txt"), Path.Combine(Application.StartupPath, "serial.txt"), true);
+
+            }
+
             if (!achievementFix.Checked)
             {
                 statusLabel.Text = "Uninstalling Achievement Fix";
-                File.Delete(Application.StartupPath + @"\FlashAchievements.exe");
-                File.Copy(Application.StartupPath + @"\FlashAchievements.old",Application.StartupPath + @"\FlashAchievements.exe");
-                File.Delete(Application.StartupPath + @"\FlashAchievements.old");
+                File.Delete(Path.Combine(Application.StartupPath,"FlashAchievements.exe"));
+                File.Move(Path.Combine(Application.StartupPath,"FlashAchievements.old"),Path.Combine(Application.StartupPath, "FlashAchievements.exe"));
             }
+
+            if (File.Exists(Path.Combine(GetSolPath(), "so.sol")))
+            {
+                File.SetAttributes(Path.Combine(GetSolPath(), "so.sol"), FileAttributes.Normal);
+                File.Delete(Path.Combine(GetSolPath(), "so.sol"));
+            }
+
+
+            if (File.Exists(Path.Combine(GetSolPath(), "so.sxx")))
+            {
+                File.SetAttributes(Path.Combine(GetSolPath(), "so.sxx"), FileAttributes.Normal);
+                File.Delete(Path.Combine(GetSolPath(), "so.sxx"));
+            }
+            
+            Directory.Delete(Path.Combine(Application.StartupPath, "vanilla"),true);
+            Directory.Delete(Path.Combine(Application.StartupPath, "wotl"), true);
+            File.Delete(Path.Combine(Application.StartupPath, "serial.txt.bak"));
         }
 
-        private void vanillaButton_Click(object sender, EventArgs e)
+        private string GetSolPath()
         {
-            uninstall("Isaac_Vanilla.exe", "Isaac_WotL.exe");
-            MessageBox.Show("The Binding of Isaac Launcher has been uninstalled. Vanilla Binding of Isaac was kept");
-            this.Close();
+            string savePathContainer = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Macromedia", "Flash Player", "#SharedObjects");
+            string savePath = Path.Combine(Directory.GetDirectories(savePathContainer).First(), "localhost");
+            return savePath;
         }
 
+    }
 
-        
-
+    public enum GameTypes
+    {
+        BOI_WOTL,
+        BOI_VANILLA
     }
 }
