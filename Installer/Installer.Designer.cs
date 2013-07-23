@@ -30,27 +30,28 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Installer));
-            this.StatusLabel = new System.Windows.Forms.Label();
+            this.statusLabel = new System.Windows.Forms.Label();
             this.installpathbutton = new System.Windows.Forms.Button();
             this.nextbutton = new System.Windows.Forms.Button();
             this.filePath = new System.Windows.Forms.TextBox();
             this.achievementFixBox = new System.Windows.Forms.CheckBox();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.achievementFixToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // StatusLabel
             // 
-            this.StatusLabel.AutoSize = true;
-            this.StatusLabel.Location = new System.Drawing.Point(11, 21);
-            this.StatusLabel.Name = "StatusLabel";
-            this.StatusLabel.Size = new System.Drawing.Size(225, 13);
-            this.StatusLabel.TabIndex = 0;
-            this.StatusLabel.Text = "Binding of Isaac Launcher Revamped Installer";
+            this.statusLabel.AutoSize = true;
+            this.statusLabel.Location = new System.Drawing.Point(11, 21);
+            this.statusLabel.Name = "StatusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(225, 13);
+            this.statusLabel.TabIndex = 0;
+            this.statusLabel.Text = "Binding of Isaac Launcher Revamped Installer";
             // 
             // installpathbutton
             // 
-            this.installpathbutton.Location = new System.Drawing.Point(35, 216);
+            this.installpathbutton.Location = new System.Drawing.Point(35, 138);
             this.installpathbutton.Name = "installpathbutton";
             this.installpathbutton.Size = new System.Drawing.Size(152, 35);
             this.installpathbutton.TabIndex = 1;
@@ -60,7 +61,7 @@
             // 
             // nextbutton
             // 
-            this.nextbutton.Location = new System.Drawing.Point(200, 216);
+            this.nextbutton.Location = new System.Drawing.Point(200, 138);
             this.nextbutton.Name = "nextbutton";
             this.nextbutton.Size = new System.Drawing.Size(152, 35);
             this.nextbutton.TabIndex = 2;
@@ -99,17 +100,25 @@
             this.linkLabel1.Text = "Achivement Fix Information";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(35, 109);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(317, 23);
+            this.progressBar1.TabIndex = 6;
+            // 
             // Installer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(387, 262);
+            this.ClientSize = new System.Drawing.Size(387, 183);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.achievementFixBox);
             this.Controls.Add(this.filePath);
             this.Controls.Add(this.nextbutton);
             this.Controls.Add(this.installpathbutton);
-            this.Controls.Add(this.StatusLabel);
+            this.Controls.Add(this.statusLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Installer";
@@ -123,13 +132,14 @@
 
         #endregion
 
-        private System.Windows.Forms.Label StatusLabel;
+        private System.Windows.Forms.Label statusLabel;
         private System.Windows.Forms.Button installpathbutton;
         private System.Windows.Forms.Button nextbutton;
         private System.Windows.Forms.TextBox filePath;
         private System.Windows.Forms.CheckBox achievementFixBox;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.ToolTip achievementFixToolTip;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 

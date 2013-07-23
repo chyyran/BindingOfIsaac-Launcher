@@ -45,6 +45,18 @@ namespace Installer
 
         }
 
+        public void CheckWrathOfTheLamb()
+        {
+            if (!File.Exists(Path.Combine(isaacPath, "Isaac.exe")))
+            {
+                throw new FileNotFoundException("Isaac.exe not found");
+            }
+            if(!CheckMD5(Path.Combine(isaacPath, "Isaac.exe"), File.ReadAllText(Path.Combine(installerPath, "WotL.md5")))){
+                throw new IOException("Isaac.exe failed verification check. Corrupt or missing copy of Binding of Isaac: Wrath of The Lamb");
+  
+            }
+        }
+        
         public void PatchWrathOfTheLamb()
         {
             //For some odd reason, if we specify path to xdelta, the resulting app will have admin manifest, so we copy it to the application startup directory

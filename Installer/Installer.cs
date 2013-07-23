@@ -44,7 +44,7 @@ namespace Installer
                     this.Close();
                 }
 
-                StatusLabel.Text = "Binding of Isaac Launcher: Revamped will install to";
+                statusLabel.Text = "Binding of Isaac Launcher: Revamped will install to";
                 filePath.Text = dialog.SelectedPath;
 
             }
@@ -56,38 +56,39 @@ namespace Installer
         private string CheckFiles()
         {
             //Check for xdelta patch util
-            String StartPath = Application.StartupPath;
-            if (!File.Exists(StartPath + @"\xdelta.exe"))
+ 
+            if (!File.Exists(Path.Combine(Application.StartupPath, "xdelta.exe")));
             {
                 return "xdelta.exe";
             }
             //Check for patch file
-            if (!File.Exists(StartPath + @"\patch.xdelta"))
+            if (!File.Exists(Path.Combine(Application.StartupPath, "patch.xdelta")))
             {
                 return "patch.xdelta";
             }
             //Check for launcher file
-            if (!File.Exists(StartPath + @"\launcher.exe"))
+            if (!File.Exists(Path.Combine(Application.StartupPath, "launcher.exe")))
             {
                 return "launcher.exe";
             }
             //Check for AchievementFix
-            if (!File.Exists(StartPath + @"\FlashAchievements.exe"))
+            if (!File.Exists(Path.Combine(Application.StartupPath, "FlashAchievements.exe")))
             {
                 return "FlashAchievements.exe";
             }
             //Check for Uninstall file
-            if (!File.Exists(StartPath + @"\uninstaller.exe"))
+            if (!File.Exists(Path.Combine(Application.StartupPath, "uninstaller.exe")))
             {
                 return "uninstaller.exe";
             }
             //Check for Wrath of the Lamb md5
-            if (!File.Exists(StartPath + @"\WotL.md5"))
+            if (!File.Exists(Path.Combine(Application.StartupPath, "WotL.md5")))
             {
                 return "WotL.md5";
             }
             //check for Vanilla md5
-            if (!File.Exists(StartPath+@"\Vanilla.md5")){
+            if (!File.Exists(Path.Combine(Application.StartupPath, "Vanilla.md5")))
+            {
                 return "Vanilla.md5";
             }
             //If everything is present, we return "good"
@@ -113,43 +114,99 @@ namespace Installer
             if (confirm == DialogResult.Yes)
             {
 
-               try
+                try
                 {
+
+                    installpathbutton.Hide();
+                    nextbutton.Hide();
+                    filePath.Hide();
+                    linkLabel1.Hide();
+                    achievementFixBox.Hide();
+
+                    int progBarIncrement;
+
+                    if (achievementFixBox.Checked)
+                    {
+                        progBarIncrement = 100 / 7;
+
+                    }
+                    else
+                    {
+
+                        progBarIncrement = 100 / 6;
+                    }
                     InstallerProcess installLauncher = new InstallerProcess(dialog.SelectedPath, Application.StartupPath);
+
+                    statusLabel.Text = "Verifying Wrath of The Lamb Executable";
+                    statusLabel.Refresh();
+                    installLauncher.CheckWrathOfTheLamb();
+                    IncrementStatusBar(progBarIncrement);
+
+                    statusLabel.Text = "Creating New Folder Structure";
+                    statusLabel.Refresh();
                     installLauncher.CreateFolderStructure();
-                    MessageBox.Show("FOLDERS CREATED");
+                    IncrementStatusBar(progBarIncrement);
+
+                    statusLabel.Text = "Patching Wrath of The Lamb Executable to Vanilla";
+                    statusLabel.Refresh();
                     installLauncher.PatchWrathOfTheLamb();
-                    MessageBox.Show("WOTL PATCHED");
+                    IncrementStatusBar(progBarIncrement);
+
+                    statusLabel.Text = "Installing Launcher Executable";
+                    statusLabel.Refresh();
                     installLauncher.InstallLauncher();
-                    MessageBox.Show("LAUNCHER COPIED");
-                    installLauncher.InstallAchievementFix();
-                    MessageBox.Show("ACH FIX");
+                    IncrementStatusBar(progBarIncrement);
+
+                    if (achievementFixBox.Checked)
+                    {
+                        statusLabel.Text = "Installing Achievement Fix";
+                        statusLabel.Refresh();
+                        installLauncher.InstallAchievementFix();
+                        IncrementStatusBar(progBarIncrement);
+                    }
+
+                    statusLabel.Text = "Copying Dependencies";
+                    statusLabel.Refresh();
                     installLauncher.CopyFlashAchievements();
-                    MessageBox.Show("ACH COPIED");
+                    IncrementStatusBar(progBarIncrement);
+
+                    statusLabel.Text = "Installing Save File Fixes";
+                    statusLabel.Refresh();
                     installLauncher.InstallSavesFix();
-                    MessageBox.Show("SAVES FIXED");
+                    IncrementStatusBar(progBarIncrement);
+
+                    MessageBox.Show("The Binding of Isaac Launcher has been installed");
+                   
                 }
 
-               catch (Exception ex)
-               {
-                 MessageBox.Show("Encountered Exception " + ex.GetType().ToString() + Environment.NewLine + ex.Message + Environment.NewLine 
-                     + "Verify game cache with Steam and try again." +
-                     Environment.NewLine+
-                     "If you do not own the Wrath of the Lamb DLC, the Launcher will fail to install."
-                     +Environment.NewLine+
-                     "If you are re-installing, please uninstall before you attempt installing again"
-                     );
-                 InstallerProcess.ExceptionCleanup(dialog.SelectedPath);
-               }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Encountered Exception " + ex.GetType().ToString() + Environment.NewLine + ex.Message + Environment.NewLine
+                        + "Verify game cache with Steam and try again." +
+                        Environment.NewLine +
+                        "If you do not own the Wrath of the Lamb DLC, the Launcher will fail to install."
+                        + Environment.NewLine +
+                        "If you are re-installing, please uninstall before you attempt installing again"
+                        );
+                    InstallerProcess.ExceptionCleanup(dialog.SelectedPath);
+                }
 
-               finally
-               {
-                   this.Close();
-               }
+                finally
+                {
+                    this.Close();
+                }
             }
 
         }
 
+        private void IncrementStatusBar(int increment)
+        {
+            progressBar1.Increment(increment);
+            progressBar1.Refresh();
+            //Sleep for half a second, for aesthetic purposes :)
+            System.Threading.Thread.Sleep(500);
+
+        }
     }
 
 }

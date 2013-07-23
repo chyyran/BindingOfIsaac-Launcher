@@ -82,7 +82,7 @@ namespace Uninstaller
             achievementFix.Hide();
             
             statusLabel.Text = "Uninstalling Binding of Isaac Launcher";
- 
+            statusLabel.Refresh();
             if (keep == GameTypes.BOI_VANILLA)
             {
                 File.Copy(Path.Combine(Application.StartupPath, "vanilla","Isaac_Vanilla.exe"), Path.Combine(Application.StartupPath,"Isaac.exe"), true);
