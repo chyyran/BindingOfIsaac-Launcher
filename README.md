@@ -1,4 +1,4 @@
-Binding of Isaac Launcher: Revamped 
+FreeIsaac - Binding of Isaac Launcher
 ==========================================
 
 Building
